@@ -24,4 +24,4 @@ Grønn kjøring: https://github.com/lilliantraan/pgr301-eksamen-2026/actions/run
 
 ECR-repository: `wishifai-49`
 
-Tagging-strategi: Tagger hvert image med både commit-SHA og "latest". "Latest" flyttes ved hver push, så den ikke alene sier hvilken kode som faktisk kjører. Med commit-SHA, kan jeg spore et image tilbake til nøyaktig den commiten i GitHun, og gå tilbake ved å deploye en eldre tag. Ulempen, er at det blir mange images i ECR over tid, så i et ekte prosjekt ville jeg satt opp autmatisk sletting av gamle images.
+Tagging-strategi: Tagger hvert image med både commit-SHA og "latest". "Latest" flyttes ved hver push, så den ikke alene sier hvilken kode som faktisk kjører. Med commit-SHA, kan jeg spore et image tilbake til nøyaktig den commiten i GitHub, og gå tilbake ved å deploye en eldre tag. Ulempen, er at det blir mange images i ECR over tid, så i et ekte prosjekt ville jeg satt opp automatisk sletting av gamle images.
