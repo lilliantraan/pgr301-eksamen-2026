@@ -19,6 +19,8 @@ resource "aws_ecs_express_gateway_service" "app" {
   infrastructure_role_arn = local.infrastructure_role_arn
   task_role_arn           = aws_iam_role.task.arn
   health_check_path       = "/api/health"
+  cpu                     = "512"
+  memory                  = "1024"
   wait_for_steady_state   = true
 
   primary_container {

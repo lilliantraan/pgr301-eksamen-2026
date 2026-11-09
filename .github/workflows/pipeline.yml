@@ -4,6 +4,10 @@ on:
   push:
     branches: [main]
 
+concurrency:
+  group: deploy
+  cancel-in-progress: false
+
 env:
   AWS_REGION: eu-west-1
   ECR_REPOSITORY: wishifai-49
@@ -11,6 +15,8 @@ env:
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
+    outputs:
+      image_tag: ${{ github.sha }}
     steps:
       - uses: actions/checkout@v4
 
@@ -31,3 +37,34 @@ jobs:
           docker build -t "$IMAGE:$GITHUB_SHA" -t "$IMAGE:latest" .
           docker push "$IMAGE:$GITHUB_SHA"
           docker push "$IMAGE:latest"
+
+  terraform:
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: infra
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.17.1
+
+      - name: Check formatting
+        run: terraform fmt -check -recursive
+
+      - name: Init
+        run: terraform init -input=false
+
+      - name: Validate
+        run: terraform validate
+
+      - name: Apply
+        run: terraform apply -auto-approve -input=false -var "image_tag=${{ needs.build-and-push.outputs.image_tag }}"
