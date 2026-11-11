@@ -66,5 +66,8 @@ jobs:
       - name: Validate
         run: terraform validate
 
-      - name: Apply
+      - name: Apply   
+        env:
+          TF_VAR_alarm_email: ${{ secrets.ALARM_EMAIL }}
         run: terraform apply -auto-approve -input=false -var "image_tag=${{ needs.build-and-push.outputs.image_tag }}"
+        
