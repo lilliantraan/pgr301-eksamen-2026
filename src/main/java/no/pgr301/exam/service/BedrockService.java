@@ -31,12 +31,7 @@ public class BedrockService {
         this.modelId = modelId;
     }
 
-    /**
-     * Denne måten å lage prompt på kalles "chain-of-thought" og kan være veldig effektivt
-     * Dette er også et eksempel på negative prompting
-     * @param labels
-     * @return
-     */
+
     public GiftAnalysis suggestGifts(List<String> labels) {
         String prompt = """
                 Du er en gaveassistent. Du får en liste med objekter som Rekognition
